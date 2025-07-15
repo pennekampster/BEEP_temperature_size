@@ -92,7 +92,7 @@ create_output_folder <- function(){
   
   # check and create directories to store outputs 
   output_dirs <- list("output", "output/tables/", "output/tables/polycultures/",
-                      "output/tables/monocultures/", "output/figures/" , "output/figures/main/", "output/figures/not_for_paper/")
+                      "output/tables/monocultures/", "output/figures/" , "output/figures/main/", "output/figures/supplement/",  "output/figures/not_for_paper/")
 
   lapply(output_dirs, function(x) if (!dir.exists(x)) {dir.create(x)})
   

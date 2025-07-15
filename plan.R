@@ -116,6 +116,9 @@ plan <- drake_plan(
 # visualise dependencies
 #vis_drake_graph(plan)
 
+# Re-run analysis from scratch
+#clean()
+
 # run drake plan
 source(here::here("R/funs.R"))
 
