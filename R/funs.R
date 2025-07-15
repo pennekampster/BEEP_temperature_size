@@ -30,7 +30,7 @@ return(data)
 }
 
 plot_processed_data <- function(data, rich=1){
-  pdf(here::here(paste0("output/figures/not_for_paper/size_abundance_dynamics_rich_",rich,".pdf")), height=12,width=12)
+  #pdf(here::here(paste0("output/figures/not_for_paper/size_abundance_dynamics_rich_",rich,".pdf")), height=12,width=12)
   p1 <- data %>% group_by(predicted_species, species_label, day, temperature, richness, competition, replicate, combination) %>%  
   dplyr::summarize(mean_size = mean(Major)) %>%
   filter(richness==rich) %>%
@@ -45,7 +45,7 @@ plot_processed_data <- function(data, rich=1){
     ggplot(data=., aes(x=day, y=abundance, group=temperature, colour=temperature)) + geom_point() + geom_smooth(se=F) + 
     facet_wrap(combination~ predicted_species, scales="free_y") + scale_y_log10()
  print(p2)
- dev.off()
+ #dev.off()
 }
 
 
@@ -92,7 +92,7 @@ create_output_folder <- function(){
   
   # check and create directories to store outputs 
   output_dirs <- list("output", "output/tables/", "output/tables/polycultures/",
-                      "output/tables/monocultures/", "output/figures/" , "output/figures/main/", "output/figures/supplement/",  "output/figures/not_for_paper/")
+                      "output/tables/monocultures/", "output/figures/" , "output/figures/main/")
 
   lapply(output_dirs, function(x) if (!dir.exists(x)) {dir.create(x)})
   
@@ -289,21 +289,6 @@ twoway_mixed_model_analysis_size <- function(data){
   return(list(tw_estimates_df, nd_df, models))
 }
 
-visualize_twoway_mixed_model_parameters_size <- function(data){
-  
-  ggplot(data=subset(data, effect == "fixed"), aes(x=species_label, y= estimate, colour=species_label)) + geom_point() + geom_errorbar(aes(ymin=`2.5 %`, ymax=`97.5 %`)) +   theme_bw() +
-    facet_wrap(~ term, scales = "free", labeller = label_wrap_gen(width=20)) + geom_hline(yintercept=0, linetype="dashed", colour="black") + guides(colour=F) +
-    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.x = element_text(angle=45, vjust=.5, hjust=.4)) + scale_x_discrete(labels=c("Colpidium\n striatum", "Dexiostoma\n campylum", "Loxocephalus sp.", "Paramecium\n caudatum", "Spirostomum\n teres", "Tetrahymena\n thermophila"))
-  ggsave(here::here("output/figures/supplement/Two_way_mixed_model_coeffs_fixed_size.jpg"), height=6,width=10)
-  
-  ggplot(data=subset(data, effect == "ran_pars"), aes(x=species_label, y= estimate, colour=species_label)) + geom_point() + geom_errorbar(aes(ymin=`2.5 %`, ymax=`97.5 %`)) +   theme_bw() +
-    facet_wrap(~ term, scales = "free", labeller = label_wrap_gen(width=14)) + geom_hline(yintercept=0, linetype="dashed", colour="black") + guides(colour=F) +
-    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.x = element_text(angle=45, vjust=.5, hjust=.4)) + scale_x_discrete(labels=c("Colpidium\n striatum", "Dexiostoma\n campylum", "Loxocephalus sp.", "Paramecium\n caudatum", "Spirostomum\n teres", "Tetrahymena\n thermophila"))
-  ggsave(here::here("output/figures/supplement/Two_way_mixed_model_coeffs_random_size.jpg"), height=6,width=10)
-  
-}
-
-
 
 linear_model_analysis_size <- function(data){
   
@@ -462,7 +447,7 @@ linear_model_analysis_supply <- function(data, supply_proxy = "max_bm"){
   
   species <- c("Colpidium striatum", "Dexiostoma campylum", "Loxocephalus sp.", "Paramecium caudatum", "Spirostomum teres", "Tetrahymena thermophila")
   
-  pdf("output/figures/not_for_paper/model_diagnostics_supply.pdf")
+  #pdf("output/figures/not_for_paper/model_diagnostics_supply.pdf")
   for (i in 1:6){
     
     select_df <- subset(data, species_label == species[i] & richness == 1)
@@ -483,7 +468,7 @@ linear_model_analysis_supply <- function(data, supply_proxy = "max_bm"){
     models[[i]] [['Quadratic mixed model']] <- mod_length_poly
     
   }
-    dev.off()
+    #dev.off()
   
   cm <- c('(Intercept)' = 'Constant',
           'temp_sc' = 'Scaled temperature',
@@ -890,30 +875,6 @@ twoway_mixed_model_analysis_SD_ratio <- function(data){
 
 
 
-
-visualize_twoway_mixed_model_parameters_SD_ratio <- function(data){
-  ggplot(data=subset(data, effect == "fixed"), aes(x=species_label, y= estimate, colour=species_label)) + geom_point() + geom_errorbar(aes(ymin=`2.5 %`, ymax=`97.5 %`)) +   theme_bw() +
-    facet_wrap(~ term, scales = "free", labeller = label_wrap_gen(width=20)) + geom_hline(yintercept=0, linetype="dashed", colour="black") + guides(colour=F) +
-    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.x = element_text(angle=45, vjust=.5, hjust=.4)) + scale_x_discrete(labels=c("Colpidium\n striatum", "Dexiostoma\n campylum", "Loxocephalus sp.", "Paramecium\n caudatum", "Spirostomum\n teres", "Tetrahymena\n thermophila"))
-  ggsave(here::here("output/figures/supplement/Two_way_mixed_model_coeffs_fixed_SD.jpg"), height=6,width=10)
-  
-  ggplot(data=subset(data, effect == "ran_pars"), aes(x=species_label, y= estimate, colour=species_label)) + geom_point() + geom_errorbar(aes(ymin=`2.5 %`, ymax=`97.5 %`)) +   theme_bw() +
-    facet_wrap(~ term, scales = "free", labeller = label_wrap_gen(width=14)) + geom_hline(yintercept=0, linetype="dashed", colour="black") + guides(colour=F) +
-    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.x = element_text(angle=45, vjust=.5, hjust=.4)) + scale_x_discrete(labels=c("Colpidium\n striatum", "Dexiostoma\n campylum", "Loxocephalus sp.", "Paramecium\n caudatum", "Spirostomum\n teres", "Tetrahymena\n thermophila"))
-  ggsave(here::here("output/figures/supplement/Two_way_mixed_model_coeffs_random_SD.jpg"), height=6,width=10)
-  
-}
-
-
-
-
-
-
-
-
-
-
-
 fit_logistic_growth <- function(data, response_var){
 
   pop_dyn <- data %>% group_by(predicted_species, temperature, day, replicate, microcosmID) %>%
@@ -1163,7 +1124,7 @@ counter <- 1
 
 for (i in c("Colp", "Dexio", "Loxo", "Para", "Spiro", "Tetra")){
 
-pdf(paste0("output/figures/not_for_paper/model_diagnostics_SD_",i ,".pdf"))
+#pdf(paste0("output/figures/not_for_paper/model_diagnostics_SD_",i ,".pdf"))
 selected_species <- i
 
 dd <- subset(data, predicted_species == selected_species) %>% mutate(log_supply_over_log_demand_c = log_supply_over_log_demand - mean(log_supply_over_log_demand, na.rm=T))
@@ -1175,7 +1136,7 @@ mods[[counter]] <- lm(mean_log_major ~ log_supply_over_log_demand_c, data=dd)
 cm <- c('(Intercept)' = 'Constant',
         'log_supply_over_log_demand_c' = 'log(S/D)'
 )
-dev.off()
+#dev.off()
 
 models[[counter]] <- list()
 models[[counter]][['Linear model']] <- mods[[counter]]
@@ -1395,7 +1356,7 @@ for (i in c("Colp", "Dexio", "Loxo", "Para", "Spiro", "Tetra")){
 
 selected_species <- i
 
-pdf(here::here(paste0("output/figures/not_for_paper/Figure_SX_", i,".pdf")), width = 10, height=8)
+#pdf(here::here(paste0("output/figures/not_for_paper/Figure_SX_", i,".pdf")), width = 10, height=8)
 
 #data$comb_rich <- paste0(data$combination,"_", data$richness)
 
@@ -1509,7 +1470,7 @@ pdf(here::here(paste0("output/figures/not_for_paper/Figure_SX_", i,".pdf")), wid
   
   assign(paste0("plt_", selected_species), plt)
   
-dev.off()
+#dev.off()
 counter <- counter+1
 }
 
