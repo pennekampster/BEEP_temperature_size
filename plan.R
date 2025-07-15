@@ -58,8 +58,8 @@ plan <- drake_plan(
   raw_data = load_data(),
   processed_data = process_data(raw_data),
   
-  # some diagnostic plots for the underlying size and abundance dynamics
-  #plot_size_abundance = for (i in 1:6) plot_processed_data(processed_data, rich=i),
+  # set up folder structure for outputs
+  folder_ok = create_output_folder(),
   
   # aggregate size dataset for analysis
   mean_size_data = create_dataset_analysis_mean_size(processed_data),
@@ -123,7 +123,7 @@ source(here::here("R/funs.R"))
 make(plan)
 
 # look at intermediate result
-# loadd(raw_data)
+# loadd(folder_ok)
 # loadd(processed_data)
 
 

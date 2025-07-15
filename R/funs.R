@@ -87,8 +87,20 @@ dd_mean_size_poly <- data %>%
   return(dd_mean_size_poly)
 }
 
+
+create_output_folder <- function(){
+  
+  # check and create directories to store outputs 
+  output_dirs <- list("output", "output/tables/", "output/tables/polycultures/",
+                      "output/tables/monocultures/", "output/figures/" , "output/figures/main/", "output/figures/not_for_paper/")
+
+  lapply(output_dirs, function(x) if (!dir.exists(x)) {dir.create(x)})
+  
+}
+
 twoway_mixed_model_analysis_size <- function(data){
 
+  
   #data <- mean_size_data
   
   nd <- vector("list", 6)
@@ -278,7 +290,7 @@ twoway_mixed_model_analysis_size <- function(data){
 }
 
 visualize_twoway_mixed_model_parameters_size <- function(data){
-
+  
   ggplot(data=subset(data, effect == "fixed"), aes(x=species_label, y= estimate, colour=species_label)) + geom_point() + geom_errorbar(aes(ymin=`2.5 %`, ymax=`97.5 %`)) +   theme_bw() +
     facet_wrap(~ term, scales = "free", labeller = label_wrap_gen(width=20)) + geom_hline(yintercept=0, linetype="dashed", colour="black") + guides(colour=F) +
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.x = element_text(angle=45, vjust=.5, hjust=.4)) + scale_x_discrete(labels=c("Colpidium\n striatum", "Dexiostoma\n campylum", "Loxocephalus sp.", "Paramecium\n caudatum", "Spirostomum\n teres", "Tetrahymena\n thermophila"))
@@ -420,6 +432,8 @@ linear_model_analysis_size <- function(data){
 
 linear_model_analysis_supply <- function(data, supply_proxy = "max_bm"){
   #browser()
+  
+  
   data <- data %>% mutate(richness_sq = richness^2,
                           rich_sc = as.numeric(scale(richness, center = TRUE, scale = FALSE)),
                           rich_sc_sq = as.numeric(scale(rich_sc^2, center = TRUE, scale = FALSE)),
