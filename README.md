@@ -4,7 +4,7 @@ Title: "Temperature-dependent supply and demand drive shrinking body sizes acros
 Author(s): Mikael Pontarp, Jason Griffiths, Pedro Rosero, Florian Altermatt, Yves Choffat, John DeLong, Aurelie Garnier, Suzanne Greene, Thomas Massie, Gian-Marco Palmara, Mathew Seymour, Owen L Petchey, and Frank Pennekamp
 
 Instructions:
-- The Data folder contains the raw data as a single csv file (Individual_cell_size_data.csv), as well as a csv file with the metadata (metadata.csv). 
+- The Data folder contains the raw data as a single (compressed) csv file (Individual_cell_size_data.csv.gz), as well as a csv file with the metadata (metadata.csv). 
 - We used the R package drake to create a reproducible workflow for the statistical analysis. Use the plan.R file to run the pipeline. All functions are in the R folder (funs.R).
 - Main and supplementary figures and tables can be found in the output folder.
 
