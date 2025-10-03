@@ -37,8 +37,6 @@ library(cowplot)
 # file operations
 library(fs)
 
-
-
 # source all functions
 rm(list=ls())
 source(here::here("R/funs.R"))
@@ -51,7 +49,7 @@ plan <- drake_plan(
   ## set up folder structure for outputs
   folder_ok = create_output_folder(),
   
-    ## load & process the raw data
+  ## load & process the raw data
   raw_data = load_data(),
   processed_data = process_data(raw_data),
   
@@ -80,15 +78,13 @@ plan <- drake_plan(
    poly_SD_data = create_poly_SD_data(logistic_growth_parameters_as_demand_proxy, processed_data),
    
   # Statistical analyses 
-  ## linear models on monocultures (associated with figure 2)
-   
-  ## linear model analysis on size
+  ## linear models on monocultures (used for figure 2 and associated supplementary tables (S1-7))
   linear_models_size = linear_model_analysis_size(mean_size_data), 
   linear_models_supply = linear_model_analysis_supply(poly_SD_data, "AUC"), 
   linear_models_demand = linear_model_analysis_demand(logistic_growth_parameters_as_demand_proxy), 
   linear_model_SD = linear_model_analysis_SD(mono_SD_data),
   
-  ## Mixed model analyses across richness and temperature (associated with figure 4)
+  ## Mixed model analyses across richness and temperature (used for figure 4 and associated supplementary tables (S8-11))
    
   ## two-way mixed model analysis on size
   two_way_mixed_models_size = twoway_mixed_model_analysis_size(mean_size_data),
@@ -104,15 +100,11 @@ plan <- drake_plan(
 )
 
 # visualise dependencies
-#vis_drake_graph(plan)
+# vis_drake_graph(plan)
 
 # Re-run analysis from scratch
-#clean()
-
-# run drake plan
-source(here::here("R/funs.R"))
+# clean()
 
 # run plan and produce outputs
 make(plan)
-
 

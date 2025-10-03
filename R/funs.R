@@ -1,16 +1,15 @@
-load_data <- function(){readRDS(file = here::here("Data/summarized_major_axis_distribution_data.RData"))}
-                      
+load_data <- function(){read_csv(file = here::here("Data/individual_cell_size_data.csv.gz"))}
+
 process_data <- function(data) {
 data <- data %>% filter(predicted_species != "none") %>% 
-    dplyr::select(-Area, -Major) %>% 
+    # dplyr::select(-Area, -Major) %>% 
     mutate(day = as.numeric(ymd(date)-ymd("2014-10-06")),
                     fday = as.factor(day),
                     day_range = cut(day, breaks = 6, 
                                      labels = c("0-10d", "11-20d", "21-30d", "31-40d", "41-50d", "50-60d"), right = FALSE),
                     competition = as.factor(ifelse(richness > 1, "poly", "mono")),
                     temp_center = as.vector(scale(temperature, center = T, scale = T))) %>%
-  rename(Area = mean_area,
-         Major = mean_major,
+  rename(Major = mean_major,
          Minor = mean_minor)
 
 
@@ -183,7 +182,7 @@ twoway_mixed_model_analysis_size <- function(data){
   model_obj <- c(lapply(models, "[[", 2)[c(3,6)], lapply(models, "[[", 1)[-c(3,6)])
   model_obj <- model_obj[c(3,4,1,5,6,2)]
   msummary(model_obj, statistic = 'conf.int', conf_level = .95, fmt = "%.4f", gof_omit = 'DF|Deviance|Log.Lik.|REMLcrit|BIC', 
-           output = here::here("output/tables/polycultures/2way_mixed_model_table_size.docx"))
+           output = here::here("output/tables/polycultures/2way_mixed_model_table_size_S9.docx"))
   
   aic_select_df <- bind_rows(aic_select)
   
@@ -242,7 +241,7 @@ twoway_mixed_model_analysis_size <- function(data){
     cols_hide(columns = "row_id")
   # To export to Word
   # Option 1: Using gt and webshot2 approach
-  gt::gtsave(final_table, "output/tables/polycultures/aic_tables_size.docx")
+  gt::gtsave(final_table, "output/tables/polycultures/aic_tables_size_S8.docx")
   
   
   
@@ -346,7 +345,7 @@ linear_model_analysis_size <- function(data){
    #         output = here::here("output/tables/monocultures/linear_model_table_size_quadratic.docx"))
   
     msummary(c(lapply(models, "[[", 2)[1:2], lapply(models, "[[", 1)[-c(1:2)]), statistic = 'conf.int', conf_level = .95, fmt = "%.4f", gof_omit = 'DF|Deviance|Log.Lik.|REMLcrit|BIC', 
-             output = here::here("output/tables/monocultures/linear_model_table_size.docx"))
+             output = here::here("output/tables/monocultures/linear_model_table_size_S2.docx"))
     
     aic_select_df <- bind_rows(aic_select)
     
@@ -405,7 +404,7 @@ linear_model_analysis_size <- function(data){
       cols_hide(columns = "row_id")
     # To export to Word
     # Option 1: Using gt and webshot2 approach
-    gt::gtsave(final_table, "output/tables/monocultures/aic_tables_size.docx")
+    gt::gtsave(final_table, "output/tables/monocultures/aic_tables_size_S1.docx")
     
    
   # check summary
@@ -483,7 +482,7 @@ linear_model_analysis_supply <- function(data, supply_proxy = "max_bm"){
   #          output = here::here("output/tables/monocultures/linear_model_table_supply_quadratic.docx"))
   #browser()
   msummary(c(lapply(models, "[[", 2)[1], lapply(models, "[[", 1)[-1]), statistic = 'conf.int', conf_level = .95, fmt = "%.4f", gof_omit = 'DF|Deviance|Log.Lik.|REMLcrit|BIC', 
-           output = here::here("output/tables/monocultures/linear_model_table_supply.docx"))
+           output = here::here("output/tables/monocultures/linear_model_table_supply_S6.docx"))
   
   aic_select_df <- bind_rows(aic_select)
   
@@ -542,7 +541,7 @@ linear_model_analysis_supply <- function(data, supply_proxy = "max_bm"){
     cols_hide(columns = "row_id")
   # To export to Word
   # Option 1: Using gt and webshot2 approach  
-  gt::gtsave(final_table, "output/tables/monocultures/aic_tables_supply.docx")
+  gt::gtsave(final_table, "output/tables/monocultures/aic_tables_supply_S5.docx")
   
   
   return(models)
@@ -617,7 +616,7 @@ linear_model_analysis_demand <- function(data){
   #          output = here::here("output/tables/monocultures/linear_model_table_demand_quadratic.docx"))
 
   msummary(c(lapply(models, "[[", 2)[1], lapply(models, "[[", 1)[-1]), statistic = 'conf.int', conf_level = .95, fmt = "%.4f", gof_omit = 'DF|Deviance|Log.Lik.|REMLcrit|BIC', 
-           output = here::here("output/tables/monocultures/linear_model_table_demand.docx"))
+           output = here::here("output/tables/monocultures/linear_model_table_demand_S4.docx"))
   
   aic_select_df <- bind_rows(aic_select)
   
@@ -676,7 +675,7 @@ linear_model_analysis_demand <- function(data){
     cols_hide(columns = "row_id")
   # To export to Word
   # Option 1: Using gt and webshot2 approach
-  gt::gtsave(final_table, "output/tables/monocultures/aic_tables_demand.docx")
+  gt::gtsave(final_table, "output/tables/monocultures/aic_tables_demand_S3.docx")
   
   
 }
@@ -768,7 +767,7 @@ twoway_mixed_model_analysis_SD_ratio <- function(data){
   #browser()
   
    msummary(lapply(models, "[[", 1), statistic = 'conf.int', conf_level = .95, fmt = "%.4f", gof_omit = 'DF|Deviance|Log.Lik.|REMLcrit|BIC', 
-            output = here::here("output/tables/polycultures/2way_mixed_model_table_SD.docx"))
+            output = here::here("output/tables/polycultures/2way_mixed_model_table_SD_S11.docx"))
    
   # msummary(lapply(models, "[[", 2), statistic = 'conf.int', conf_level = .95, fmt = "%.4f", gof_omit = 'DF|Deviance|Log.Lik.|REMLcrit|BIC', 
   #          output = here::here("output/tables/polycultures/2way_mixed_model_table_SD_quadratic.docx"))
@@ -831,7 +830,7 @@ twoway_mixed_model_analysis_SD_ratio <- function(data){
     cols_hide(columns = "row_id")
   # To export to Word
   # Option 1: Using gt and webshot2 approach
-  gt::gtsave(final_table, "output/tables/polycultures/aic_tables_SD_ratio.docx")
+  gt::gtsave(final_table, "output/tables/polycultures/aic_tables_SD_ratio_S10.docx")
   
   
   nd_df <- bind_rows(nd)
@@ -1157,7 +1156,7 @@ counter <- counter+1
 names(models) <-  c("Colpidium striatum", "Dexiostoma campylum", "Loxocephalus sp.", "Paramecium caudatum", "Spirostomum teres", "Tetrahymena thermophila")
 
 msummary(lapply(models, "[[", 1), statistic = 'conf.int', conf_level = .95, fmt = "%.4f", gof_omit = 'DF|Deviance|Log.Lik.|REMLcrit|BIC', 
-         output = here::here("output/tables/monocultures/linear_model_table_SD.docx"))
+         output = here::here("output/tables/monocultures/linear_model_table_SD_S7.docx"))
 
 return(as.data.frame(bind_rows(dds)))
 }
@@ -1171,8 +1170,8 @@ build_composite_figure_SD_model_mono <- function(data){
     geom_point(data=data, aes(x=temperature, y=mean_log_major, colour=species_label, group=species_label, fill=species_label), size = 1.5)  + 
     facet_grid(species_label~., scale = "free", labeller = label_wrap_gen(width=10)) + 
     ylab("Mean log cell length (in micrometers)") +
-    stat_smooth(data=filter(data, species_label %in% c("Colpidium striatum", "Dexiostoma campylum")), aes(x=temperature, y=mean_log_major, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ poly(x, 2)", se=F, size=1.5)+
-    stat_smooth(data=filter(data, !(species_label %in% c("Colpidium striatum", "Dexiostoma campylum"))), aes(x=temperature, y=mean_log_major, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ x", se=F, size=1.5)+
+    stat_smooth(data=filter(data, species_label %in% c("Colpidium striatum", "Dexiostoma campylum")), aes(x=temperature, y=mean_log_major, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ poly(x, 2)", se=F, linewidth=1.5)+
+    stat_smooth(data=filter(data, !(species_label %in% c("Colpidium striatum", "Dexiostoma campylum"))), aes(x=temperature, y=mean_log_major, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ x", se=F, linewidth=1.5)+
        # stat_smooth(se=F, size=1.5, linetype="dashed")+
     xlab("temperature") + guides(colour="none", fill="none")  + scale_x_continuous(breaks=c(15,17,19,21,23,25)) + theme_bw() +
     theme(plot.title = element_text(face = "bold"),
@@ -1184,8 +1183,8 @@ build_composite_figure_SD_model_mono <- function(data){
   p1 <- ggplot(data=subset(data), aes(x=temp_sc+20, y= estimate, colour=species_label, group=species_label, fill=species_label)) + 
     geom_point(size=1.5) + 
     facet_grid(species_label~., labeller = label_wrap_gen(width=10), scales = "free") +
-    stat_smooth(data=filter(data, species_label %in% c("Colpidium striatum")), aes(x=temperature, y=estimate, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ poly(x, 2)", se=F, size=1.5)+
-    stat_smooth(data=filter(data, !(species_label %in% c("Colpidium striatum"))), aes(x=temperature, y=estimate, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ x", se=F, size=1.5)+
+    stat_smooth(data=filter(data, species_label %in% c("Colpidium striatum")), aes(x=temperature, y=estimate, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ poly(x, 2)", se=F, linewidth=1.5)+
+    stat_smooth(data=filter(data, !(species_label %in% c("Colpidium striatum"))), aes(x=temperature, y=estimate, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ x", se=F, linewidth=1.5)+
 #    stat_smooth(se=F, size=1.5, linetype="dashed")+
     ylab("Growth rate") + theme_bw() +  
     theme(plot.title = element_text(face = "bold"),
@@ -1195,8 +1194,8 @@ build_composite_figure_SD_model_mono <- function(data){
           strip.text.y = element_blank())  + xlab("temperature")+ guides(colour="none", fill="none")  + ggtitle("Demand")
   
   p2 <- ggplot(data=data, aes(x=temp_sc+20, y= AUC, colour=species_label, fill=species_label)) + geom_point(size=1.5) + 
-    stat_smooth(data=filter(data, species_label %in% c("Colpidium striatum")), aes(x=temperature, y=AUC, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ poly(x, 2)", se=F, size=1.5)+
-    stat_smooth(data=filter(data, !(species_label %in% c("Colpidium striatum"))), aes(x=temperature, y=AUC, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ x", se=F, size=1.5)+
+    stat_smooth(data=filter(data, species_label %in% c("Colpidium striatum")), aes(x=temperature, y=AUC, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ poly(x, 2)", se=F, linewidth=1.5)+
+    stat_smooth(data=filter(data, !(species_label %in% c("Colpidium striatum"))), aes(x=temperature, y=AUC, colour=species_label, group=species_label, fill=species_label), method = "lm", formula = "y ~ x", se=F, linewidth=1.5)+
     
     #stat_smooth(method = "lm", formula = "y ~ poly(x, 3)", se=F, linetype="dashed")+
     #stat_smooth(se=F, size=1.5, linetype="dashed")+
