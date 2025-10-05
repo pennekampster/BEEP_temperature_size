@@ -8,4 +8,4 @@ Instructions:
 - We used the R package drake to create a reproducible workflow for the statistical analysis. Use the plan.R file to run the pipeline. All functions are in the R folder (funs.R).
 - Main and supplementary figures and tables can be found in the output folder.
 
-
+<a href="https://doi.org/10.5281/zenodo.17273578"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.17273578.svg" alt="DOI"></a>
